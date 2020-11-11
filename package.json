@@ -1,6 +1,6 @@
 {
 	"name": "apollo-link-multipart",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "An Apollo link for multipart responses",
 	"keywords": [
 		"multipart",
@@ -17,12 +17,25 @@
 		"email": "me@marais.dev",
 		"url": "https://marais.io"
 	},
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		}
+	},
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"types": "types/multipartLink.d.ts",
+	"files": [
+		"types",
+		"dist"
+	],
 	"scripts": {
-		"bench": "node -r ts-node/register bench/index.ts",
-		"typecheck": "tsc --noEmit",
 		"build": "rollup -c",
-		"format": "prettier \"{*,.github/**/*}.+(yml|md)\" --write",
-		"test": "uvu -r ts-node/register tests"
+		"format": "prettier \"{*,src/**/*,tests/**/*.github/**/*}.+(ts|yml|md)\" --write",
+		"prepublishOnly": "yarn build",
+		"test": "uvu -r ts-node/register tests",
+		"typecheck": "tsc --noEmit"
 	},
 	"prettier": {
 		"bracketSpacing": true,
@@ -32,6 +45,29 @@
 		"tabWidth": 4,
 		"trailingComma": "all",
 		"useTabs": true
+	},
+	"dependencies": {
+		"deepmerge": "^4.2.2",
+		"meros": "^1.0.0-beta.4",
+		"nestie": "^1.0.0"
+	},
+	"devDependencies": {
+		"@apollo/client": "^3.3.0-rc.0",
+		"@marais/tsconfig": "0.0.1",
+		"@rollup/plugin-node-resolve": "10.0.0",
+		"@types/node": "14.14.7",
+		"graphql": "^15.4.0",
+		"graphql-tag": "^2.11.0",
+		"prettier": "2.1.2",
+		"rollup": "2.33.1",
+		"rollup-plugin-typescript2": "0.29.0",
+		"ts-node": "^9.0.0",
+		"typescript": "4.0.5",
+		"uvu": "0.4.1",
+		"zen-observable": "^0.8.15"
+	},
+	"peerDependencies": {
+		"@apollo/client": ">=3.2"
 	},
 	"volta": {
 		"node": "15.1.0",
