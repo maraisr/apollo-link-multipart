@@ -1,0 +1,40 @@
+{
+	"name": "apollo-link-multipart",
+	"version": "0.0.1",
+	"description": "An Apollo link for multipart responses",
+	"keywords": [
+		"multipart",
+		"multipart mixed",
+		"fetch",
+		"apollo",
+		"stream",
+		"defer"
+	],
+	"repository": "maraisr/apollo-link-multipart",
+	"license": "MIT",
+	"author": {
+		"name": "Marais Rossouw",
+		"email": "me@marais.dev",
+		"url": "https://marais.io"
+	},
+	"scripts": {
+		"bench": "node -r ts-node/register bench/index.ts",
+		"typecheck": "tsc --noEmit",
+		"build": "rollup -c",
+		"format": "prettier \"{*,.github/**/*}.+(yml|md)\" --write",
+		"test": "uvu -r ts-node/register tests"
+	},
+	"prettier": {
+		"bracketSpacing": true,
+		"printWidth": 80,
+		"proseWrap": "always",
+		"singleQuote": true,
+		"tabWidth": 4,
+		"trailingComma": "all",
+		"useTabs": true
+	},
+	"volta": {
+		"node": "15.1.0",
+		"yarn": "1.22.5"
+	}
+}
