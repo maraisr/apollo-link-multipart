@@ -10,6 +10,7 @@ import {
 	serializeFetchParameter,
 } from '@apollo/client/link/http';
 import deepmerge from 'deepmerge';
+import { dset } from 'dset';
 import { meros } from 'meros';
 import { nestie } from 'nestie';
 
@@ -48,8 +49,8 @@ export const createMultipartLink = (fetchParams?: HttpOptions) => {
 			options: context.fetchOptions,
 			credentials: context.credentials,
 			headers: {
-				...context.headers,
 				accept: 'application/json, multipart/mixed',
+				...context.headers,
 			},
 		};
 
@@ -70,36 +71,41 @@ export const createMultipartLink = (fetchParams?: HttpOptions) => {
 					return meros(response);
 				})
 				.then(async (parts) => {
-					if (parts[Symbol.asyncIterator] < 'u') {
+					if (isAsyncIterable(parts)) {
 						const cache = context.cache as ApolloCache<any>;
 						let first = true;
 						for await (const part of parts) {
+							if (!part.json)
+								throw new Error(
+									`Expected part to be of json type but got:\n${part.headers}\n${part.body}`,
+								);
+
 							if (cache === undefined) {
-								observer.next(part);
+								// @ts-ignore
+								observer.next(part.body);
 								continue;
 							}
 
+							// TODO: Fix types
+							const payload = part.body as any;
+
 							if (first) {
-								observer.next({
-									data: part.data,
-								});
+								observer.next(payload);
 								first = false;
 							} else {
-								const patch_data = nestie({
-									[part.path.join('.')]: part.data,
-								});
-								const original_data = cache.read({
+								const data = cache.read({
 									query: operation.query,
 									variables: operation.variables,
 									rootId: 'ROOT_QUERY',
 									optimistic: false,
 									returnPartialData: true,
+								}) as object;
+
+								const patch_data = nestie({
+									[payload.path.join('.')]: payload.data,
 								});
 
-								const new_result = deepmerge(
-									original_data,
-									patch_data,
-								);
+								const new_result = deepmerge(data, patch_data);
 
 								cache.write({
 									result: new_result,
@@ -108,9 +114,7 @@ export const createMultipartLink = (fetchParams?: HttpOptions) => {
 									variables: operation.variables,
 								});
 
-								observer.next({
-									data: part.data,
-								});
+								observer.next(payload);
 							}
 						}
 						return void observer.complete();
@@ -125,3 +129,17 @@ export const createMultipartLink = (fetchParams?: HttpOptions) => {
 		});
 	});
 };
+
+function isAsyncIterable(
+	input: unknown,
+): input is AsyncIterableIterator<unknown> {
+	return (
+		typeof input === 'object' &&
+		input !== null &&
+		// The AsyncGenerator check is for Safari on iOS which currently does not have
+		// Symbol.asyncIterator implemented
+		// That means every custom AsyncIterable must be built using a AsyncGeneratorFunction (async function * () {})
+		((input as any)[Symbol.toStringTag] === 'AsyncGenerator' ||
+			(Symbol.asyncIterator && Symbol.asyncIterator in input))
+	);
+}

@@ -34,7 +34,7 @@
 		"build": "rollup -c",
 		"format": "prettier \"{*,src/**/*,tests/**/*.github/**/*}.+(ts|yml|md)\" --write",
 		"prepublishOnly": "yarn build",
-		"test": "uvu -r ts-node/register tests",
+		"test": "uvu -r ts-node/register -i mocks tests",
 		"typecheck": "tsc --noEmit"
 	},
 	"prettier": {
@@ -48,21 +48,21 @@
 	},
 	"dependencies": {
 		"deepmerge": "^4.2.2",
-		"meros": "^1.0.0-beta.4",
+		"meros": "^1.1.2",
 		"nestie": "^1.0.0"
 	},
 	"devDependencies": {
-		"@apollo/client": "^3.3.0-rc.0",
+		"@apollo/client": "3.3.9",
 		"@marais/tsconfig": "0.0.1",
-		"@rollup/plugin-node-resolve": "10.0.0",
-		"@types/node": "14.14.7",
-		"graphql": "^15.4.0",
+		"@rollup/plugin-node-resolve": "11.1.1",
+		"@types/node": "14.14.26",
+		"graphql": "^15.5.0",
 		"graphql-tag": "^2.11.0",
-		"prettier": "2.1.2",
-		"rollup": "2.33.1",
+		"prettier": "2.2.1",
+		"rollup": "2.38.5",
 		"rollup-plugin-typescript2": "0.29.0",
-		"ts-node": "^9.0.0",
-		"typescript": "4.0.5",
+		"ts-node": "9.1.1",
+		"typescript": "4.1.5",
 		"uvu": "0.4.1",
 		"zen-observable": "^0.8.15"
 	},
@@ -70,7 +70,7 @@
 		"@apollo/client": ">=3.2"
 	},
 	"volta": {
-		"node": "15.1.0",
-		"yarn": "1.22.5"
+		"node": "15.8.0",
+		"yarn": "1.22.10"
 	}
 }

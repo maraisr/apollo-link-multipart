@@ -4,8 +4,8 @@ import { execute } from '@apollo/client/link/core';
 import gql from 'graphql-tag';
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import { mockResponseNode } from '../lib/mocks';
 import { createMultipartLink } from '../src/multipartLink';
+import { mockResponseNode } from './mocks';
 
 const TEST_QUERY = gql`query TestQuery {
 	user {
@@ -15,8 +15,8 @@ const TEST_QUERY = gql`query TestQuery {
 }`;
 
 const patches = [
-	{ data: { user: { id: 'my-id' } }, hasNext: true },
-	{ data: { name: 'test' }, path: ['user'], hasNext: false },
+	{ data: { user: { id: 'random-id' } }, hasNext: true },
+	{ data: { name: 'random-name' }, path: ['user'], hasNext: false },
 ];
 
 // @ts-ignore
@@ -45,7 +45,7 @@ test('execute', async () => {
 	assert.equal(collection, patches);
 });
 
-test('with client :: query', async () => {
+test.only('with client :: query', async () => {
 	const client = new ApolloClient({
 		cache: new InMemoryCache({ addTypename: false }),
 		link: createMultipartLink(),
@@ -58,8 +58,8 @@ test('with client :: query', async () => {
 
 	assert.equal(data, {
 		user: {
-			id: 'my-id',
-			name: 'test',
+			id: 'random-id',
+			name: 'random-name',
 		},
 	});
 });
