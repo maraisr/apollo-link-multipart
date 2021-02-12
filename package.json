@@ -1,6 +1,6 @@
 {
 	"name": "apollo-link-multipart",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "An Apollo link for multipart responses",
 	"keywords": [
 		"multipart",
